@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
+  Bloc.observer = SimpleBlocObserver();
   final cubit = CounterCubit();
   final subscription = cubit.stream.listen(print);
   cubit.increment();
@@ -21,5 +22,13 @@ class CounterCubit extends Cubit<int> {
   void onChange(Change<int> change) {
     super.onChange(change);
     print(change);
+  }
+}
+
+class SimpleBlocObserver extends BlocObserver {
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('${bloc.runtimeType} $change');
   }
 }
