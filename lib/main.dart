@@ -1,26 +1,25 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
-  //Initialize a stream of integers 0-9
-  Stream<int> stream = countStream(10);
-
-  //Compute the sum of the stream of integers
-  int sum = await sumStream(stream);
-
-  print(sum);
+  final cubit = CounterCubit();
+  final subscription = cubit.stream.listen(print);
+  cubit.increment();
+  await Future.delayed(Duration.zero);
+  await subscription.cancel();
+  await cubit.close();
 }
 
-Stream<int> countStream(int max) async* {
-  for (int i = 0; i < max; i++) {
-    yield i;
-  }
-}
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
 
-Future<int> sumStream(Stream<int> stream) async {
-  int sum = 0;
-  await for (int value in stream) {
-    sum += value;
+  void increment() => emit(state + 1);
+
+  @override
+  void onChange(Change<int> change) {
+    super.onChange(change);
+    print(change);
   }
-  return sum;
 }
