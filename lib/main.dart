@@ -6,9 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 Future<void> main() async {
   final bloc = CounterBloc();
   print(bloc.state);
+  final subscription = bloc.stream.listen(print);
   bloc.add(CounterIncrementPressed());
   await Future.delayed(Duration.zero);
-  print(bloc.state);
+  await subscription.cancel();
   await bloc.close();
 }
 
